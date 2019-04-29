@@ -18,7 +18,8 @@ btns.forEach(btn=>{
         input.setAttribute('id',activity);
         //set text of span
         formAct.textContent = activity;
-
+        //call update function
+        update(data);
     })
 });
 form.addEventListener('submit',e=>{

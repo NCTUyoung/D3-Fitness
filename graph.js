@@ -1,9 +1,77 @@
 //data and firestore
 var data = [];
+const margin = {
+    top:40,
+    right:20,
+    bottom:50,
+    left:100
+};
+const graphWidth = 560 - margin.left - margin.right;
+const graphHeight = 400 - margin.top - margin.bottom;
+const svg = d3.select('.canvas')
+    .append('svg')
+    .attr('width',graphWidth+margin.left+margin.right)
+    .attr('height',graphHeight+margin.top+margin.bottom);
+
+const  graph = svg.append('g')
+    .attr('width',graphWidth)
+    .attr('height',graphHeight)
+    .attr('transform',`translate(${margin.left},${margin.top})`);
+
+// scales
+const  x = d3.scaleTime().range([0,graphWidth]);
+const y = d3.scaleLinear().range([graphHeight,0]);
+//axixs
+const xAxisGroup = graph.append('g')
+    .attr('class','x-axis')
+    .attr('transform',`translate(0,${graphHeight})`);
+const yAxisGroup = graph.append('g')
+    .attr('class','y-axis');
+
+// set scale domains
+
 
 const update = (data)=>{
-    console.log(data)
-}
+    //filter data according to activity
+    data = data.filter(item=>item.activity === activity);
+
+
+    // console.log(data)
+    x.domain(d3.extent(data,d=>new Date(d.date)));
+    y.domain([0,d3.max(data,d=>d.distance)]);
+    //joint data t
+    const circles = graph.selectAll('circle')
+        .data(data);
+
+    circles
+        .attr('cx',d=>new Date(d.date))
+        .attr('cy',d=>d.distance)
+    //remove unwanted points
+    circles.exit().remove();
+
+    circles.enter()
+        .append('circle')
+        .attr('r',4)
+        .attr('cx',d=>new Date(d.date))
+        .attr('cy',d=>d.distance)
+        .attr('fill','#ccc');
+
+
+    //create axes
+    const xAxis = d3.axisBottom(x)
+        .ticks(4)
+        .tickFormat(d3.timeFormat('%b %d'));
+    const yAxis = d3.axisLeft(y)
+        .ticks(4)
+        .tickFormat(d=> d + 'm');
+    //call axis
+    xAxisGroup.call(xAxis);
+    yAxisGroup.call(yAxis);
+
+    xAxisGroup.selectAll('text')
+        .attr('transform','rotate(-40)')
+        .attr('text-anchor','end')
+};
 db.collection('activities').onSnapshot(res=>{
     res.docChanges().forEach(change=>{
         // console.log(change);
@@ -22,7 +90,7 @@ db.collection('activities').onSnapshot(res=>{
             default:
                 break;
         }
-    })
+    });
 
     update(data)
-})
+});
