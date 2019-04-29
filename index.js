@@ -1,3 +1,4 @@
+// DOM elements
 const btns = document.querySelectorAll('button');
 const form = document.querySelector('form');
 const formAct = document.querySelector('form span');
@@ -6,35 +7,43 @@ const error = document.querySelector('.error');
 
 var activity = 'cycling';
 
-btns.forEach(btn=>{
-    btn.addEventListener('click',e =>{
-        // get activity
+btns.forEach(btn => {
+    btn.addEventListener('click', e => {
+        // get selected activity
         activity = e.target.dataset.activity;
-        //remove and add active class
-        btns.forEach(btn=>{
-            btn.classList.remove('active')
-        });
+
+        // remove and add active class
+        btns.forEach(btn => btn.classList.remove('active'));
         e.target.classList.add('active');
-        input.setAttribute('id',activity);
-        //set text of span
+
+        // set id of input field
+        input.setAttribute('id', activity);
+
+        // set text of form span (the activity)
         formAct.textContent = activity;
-        //call update function
+
+        // call the update function
         update(data);
-    })
+    });
 });
-form.addEventListener('submit',e=>{
-    e.preventDefault();
+
+// form submit
+form.addEventListener('submit', e => {
+    // prevent default action
+    e.preventDefault()
+
     const distance = parseInt(input.value);
-    if (distance){
+    if(distance){
         db.collection('activities').add({
             distance,
             activity,
-            date:new Date().toDateString()
-        }).then(()=>{
+            date: new Date().toString()
+        }).then(() => {
             error.textContent = '';
-            input.value = ''
-        })
-    }else {
-        error.textContent = 'Please enter a valid input'
+            input.value = '';
+        }).catch(err => console.log(err));
+    } else {
+        error.textContent = 'Please enter a valid distance'
     }
+
 });
