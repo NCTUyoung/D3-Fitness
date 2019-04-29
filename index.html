@@ -42,6 +42,21 @@
       </div>
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/5.9.4/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.9.4/firebase-firestore.js"></script>
+  <script>
+      // Initialize Firebase
+      let config = {
+          apiKey: "AIzaSyB6ceMF54etByiK87eJIgOY8fFmoUfAovI",
+          authDomain: "udemy-d3-firebase-e5e05.firebaseapp.com",
+          databaseURL: "https://udemy-d3-firebase-e5e05.firebaseio.com",
+          projectId: "udemy-d3-firebase-e5e05",
+          storageBucket: "udemy-d3-firebase-e5e05.appspot.com",
+          messagingSenderId: "411750622051"
+      };
+      firebase.initializeApp(config);
+      const db = firebase.firestore();
+  </script>
   <script src="https://d3js.org/d3.v5.js"></script>
   <script src="index.js"></script>
   <script src="graph.js"></script>
